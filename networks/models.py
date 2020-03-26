@@ -324,25 +324,25 @@ class InteractiveSegNet(nn.Module):
             ppm_out.append(nn.functional.interpolate(
                 pool_scale(conv5),
                 (input_size[2], input_size[3]),
-                mode='bilinear'))
+                mode='bilinear', align_corners=False))
         ppm_out = torch.cat(ppm_out, 1)
         x = self.conv_up1(ppm_out)
 
-        x = torch.nn.functional.interpolate(x, scale_factor=2, mode='bilinear')
+        x = torch.nn.functional.interpolate(x, scale_factor=2, mode='bilinear', align_corners=False)
 
         x = torch.cat((x, conv_out[-4]), 1)
         if self.use_usr_encoder:
             x = torch.cat((x, usr_x4), 1)
 
         x = self.conv_up2(x)
-        x = torch.nn.functional.interpolate(x, scale_factor=2, mode='bilinear')
+        x = torch.nn.functional.interpolate(x, scale_factor=2, mode='bilinear', align_corners=False)
 
         x = torch.cat((x, conv_out[-5]), 1)
         if self.use_usr_encoder:
             x = torch.cat((x, usr_x2), 1)
         x = self.conv_up3(x)
 
-        x = torch.nn.functional.interpolate(x, scale_factor=2, mode='bilinear')
+        x = torch.nn.functional.interpolate(x, scale_factor=2, mode='bilinear', align_corners=False)
 
         x = torch.cat((x, img, trimap_transformed), 1)
 

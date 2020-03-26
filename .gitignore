@@ -4,3 +4,4 @@ grabcut/
 grabcut/*
 *.pyc
 settings.json
+.ipynb_checkpoints/*

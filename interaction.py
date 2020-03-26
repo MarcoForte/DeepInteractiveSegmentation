@@ -76,7 +76,7 @@ def remove_non_fg_connected(alpha_np, fg_pos):
     if(np.count_nonzero(fg_pos) > 0):
         ys, xs = np.where(fg_pos == 1)
 
-        alpha_np_bin = alpha_np > 0.1
+        alpha_np_bin = alpha_np > 0.5
         ret, labels_con = cv2.connectedComponents((alpha_np_bin * 255).astype(np.uint8))
 
         labels_f = []
