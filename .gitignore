@@ -1,0 +1,6 @@
+*.pth
+predictions/*
+grabcut/
+grabcut/*
+*.pyc
+settings.json
