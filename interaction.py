@@ -88,6 +88,5 @@ def remove_non_fg_connected(alpha_np, fg_pos):
             fg_con[labels_con == lab] = 1
 
         alpha_np[fg_con == 0] = 0
-        # cv2.imwrite('./batch_imgs/f_con{}-{}.png'.format(i,j), fg_con*255)
 
     return alpha_np

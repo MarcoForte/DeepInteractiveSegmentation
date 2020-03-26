@@ -10,6 +10,7 @@ from interaction import robot_click, jaccard, remove_non_fg_connected
 
 
 def NOCS(ious, thresh):
+    ''' Number of clicks to reach threshold'''
     nocs = []
     for i in range(ious.shape[0]):
         for j in range(20):

@@ -39,25 +39,9 @@ class ModelBuilder():
             m.weight.data.fill_(1.)
             m.bias.data.fill_(1e-4)
 
-    def build_encoder(self, use_mask_input, arch, weights='', pretrained=True):
-        pretrained = pretrained and weights == ''
-        if arch == 'resnet50_GN_WS':
-            orig_resnet = networks.resnet_GN_WS.__dict__['l_resnet50'](pretrained=pretrained)
-            net_encoder = ResnetDilated(orig_resnet, use_mask_input, dilate_scale=8)
-
-        else:
-            raise Exception('Architecture undefined!')
-
-        if len(weights) > 0:
-            print('Loading weights for net_encoder')
-            sd = torch.load(weights, map_location=lambda storage, loc: storage)
-            bad_keys = []
-            for key in sd.keys():
-                if('_tmp_' in key):
-                    bad_keys.append(key)
-            for key in bad_keys:
-                sd[''.join(key.split('_tmp_'))] = sd.pop(key)
-            net_encoder.load_state_dict(sd, strict=True)
+    def build_encoder(self, use_mask_input, weights='', pretrained=True):
+        orig_resnet = networks.resnet_GN_WS.__dict__['l_resnet50'](pretrained=False)
+        net_encoder = ResnetDilated(orig_resnet, use_mask_input, dilate_scale=8)
 
         num_channels = 3 + 6
         if(net_encoder.use_mask_input):
@@ -80,26 +64,8 @@ class ModelBuilder():
 
         return net_encoder
 
-    def build_decoder(self, arch='', use_mask_input=True, use_usr_encoder=True, gf=True,
-                      weights=''):
-        if arch == 'InteractiveSegNet':
-            net_decoder = InteractiveSegNet(use_mask_input=use_mask_input, use_usr_encoder=use_usr_encoder, gf=gf)
-        else:
-            raise Exception('Architecture undefined!')
-
-        net_decoder.apply(self.weights_init)
-
-        if len(weights) > 0:
-            print('Loading weights for net_decoder')
-            sd = torch.load(weights, map_location=lambda storage, loc: storage)
-            bad_keys = []
-            for key in sd.keys():
-                if('_tmp_' in key):
-                    bad_keys.append(key)
-            for key in bad_keys:
-                sd[''.join(key.split('_tmp_'))] = sd.pop(key)
-            net_decoder.load_state_dict(sd, strict=False)
-
+    def build_decoder(self, use_mask_input=True, use_usr_encoder=True, gf=True):
+        net_decoder = InteractiveSegNet(use_mask_input=use_mask_input, use_usr_encoder=use_usr_encoder, gf=gf)
         return net_decoder
 
 
@@ -362,21 +328,14 @@ class InteractiveSegNet(nn.Module):
 
 def build_model(args):
     builder = ModelBuilder()
-    net_encoder = builder.build_encoder(use_mask_input=(not args.use_usr_encoder and args.use_mask_input), arch='resnet50_GN_WS')
+    net_encoder = builder.build_encoder(use_mask_input=(not args.use_usr_encoder and args.use_mask_input))
 
-    net_decoder = builder.build_decoder(arch='InteractiveSegNet', use_mask_input=args.use_mask_input, use_usr_encoder=args.use_usr_encoder, gf=True)
+    net_decoder = builder.build_decoder(use_mask_input=args.use_mask_input, use_usr_encoder=args.use_usr_encoder, gf=True)
 
     model = MattingModuleSingleGpu(net_encoder, net_decoder)
 
     model.cuda()
 
-    if(args.weights != 'default'):
-        sd = torch.load(args.weights)
-        try:
-            model.load_state_dict(sd, strict=True)
-        except Exception as e:
-            print(str(e))
-            print('Strict load failed, trying non strict')
-            model.load_state_dict(sd, strict=False)
-
+    sd = torch.load(args.weights)
+    model.load_state_dict(sd, strict=True)
     return model
