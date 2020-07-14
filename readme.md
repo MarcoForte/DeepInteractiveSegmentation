@@ -3,7 +3,7 @@
 Official repository for the two papers.
 > [**Getting to 99% Accuracy in Interactive Segmentation**](https://arxiv.org/abs/2003.07932), submitted to Signal Processing: Image Communication the Special Issue on Computational Image Editing. 
 
-> **Interactive Training and Architecture for Deep Object Selection**, accepted as oral presentation for ICME 2020.  
+> **Interactive Training and Architecture for Deep Object Selection**, (Runner-up Best Paper) ICME 2020.  
 Marco Forte<sup>1</sup>, Brian Price<sup>2</sup>, Scott Cohen<sup>2</sup>, Ning Xu<sup>2</sup>, [François Pitié](https://francois.pitie.net/)<sup>1</sup>   
 <sup>1</sup> Trinity College Dublin
 <sup>2</sup> Adobe Research
