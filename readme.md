@@ -25,7 +25,6 @@ GPU memory >= 4GB for inference on Berkeley and GrabCut. Optimal performance aro
 | Model Name  |     File Size   | NoC Grabcut  | NoC Berkeley |
 | :------------- |------------:| -----:|----:|
 | [SyntheticPretrained+Finetune on SBD](https://drive.google.com/file/d/1nJMTXSlprm5FQaQA5gfyU8CbSEX8ghzJ/view?usp=sharing)  | 144mb | 1.74 | 2.93  |
-We will release more models shortly.
 
 
 ## Prediction 
